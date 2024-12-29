@@ -276,7 +276,7 @@
 # if __name__ == "__main__":                        "7649947838:AAELaUOckt6ZJvNeXS6TjtQt8ZfgKhmwT7A"
 #     asyncio.run(main())
 ########################################################################################################################
-
+print("hello-1")
 
 from aiogram import Bot, Dispatcher, types
 from aiogram.types import Message
