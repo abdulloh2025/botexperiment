@@ -327,9 +327,9 @@ import math
 # isimlar.append("gulom")
 # print(isimlar)
 
-print("hello11")
-print("hello4")
-print("hello5")
-print("hello6")
-
-print("hello99")
+# print("hello11")
+# print("hello4")
+# print("hello5")
+# print("hello6")
+#
+# print("hello99")
