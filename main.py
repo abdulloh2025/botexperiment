@@ -564,9 +564,17 @@ from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
 import asyncio
 import matplotlib.pyplot as plt
 from datetime import datetime, timedelta
+from io import BytesIO
+from dotenv import load_dotenv
 import os
 
-BOT_TOKEN = "7896463575:AAENMaxCvJcU3lJYxQaor_MlrckpOJK6T1Y"
+# .env fayldan o'zgaruvchilarni yuklash
+load_dotenv()
+
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+
+if not BOT_TOKEN:
+    raise ValueError("BOT_TOKEN .env faylda ko'rsatilmagan yoki noto'g'ri!")
 
 # Bot va dispatcher ob'ektlari
 bot = Bot(token=BOT_TOKEN)
@@ -578,7 +586,7 @@ dp.include_router(router)
 user_data = {}
 
 # Valyuta kurslari API
-BASE_URL = "https://cbu.uz/ru/arkhiv-kursov-valyut/json/"
+BASE_URL = "https://cbu.uz/uz/arkhiv-kursov-valyut/json/"
 
 # Valyuta kurslarini olish funksiyasi
 def get_currency_rate(currency_code):
@@ -599,7 +607,7 @@ def get_historical_rates(currency_code, days=7):
     for i in range(days):
         date = today - timedelta(days=i)
         formatted_date = date.strftime("%Y-%m-%d")
-        url = f"https://cbu.uz/ru/arkhiv-kursov-valyut/json/{formatted_date}/"
+        url = f"https://cbu.uz/uz/arkhiv-kursov-valyut/json/{formatted_date}/"
         response = requests.get(url)
         if response.status_code == 200:
             data = response.json()
@@ -623,10 +631,11 @@ def create_graph(dates, rates, currency_code):
     plt.xticks(rotation=45)
     plt.tight_layout()
 
-    file_path = f"{currency_code}_graph.png"
-    plt.savefig(file_path)
+    buffer = BytesIO()
+    plt.savefig(buffer, format="png")
     plt.close()
-    return file_path
+    buffer.seek(0)
+    return buffer
 
 # /graph komandasi uchun handler
 @router.message(F.text.startswith("/graph"))
@@ -640,9 +649,8 @@ async def handle_graph_request(message: Message):
     dates, rates = get_historical_rates(currency_code)
 
     if rates:
-        graph_path = create_graph(dates, rates, currency_code)
-        await message.answer_photo(photo=open(graph_path, "rb"))
-        os.remove(graph_path)
+        graph_buffer = create_graph(dates, rates, currency_code)
+        await message.answer_photo(photo=graph_buffer)
     else:
         await message.answer("❌ Valyuta kodi bo'yicha ma'lumot topilmadi yoki noto'g'ri.")
 
@@ -653,3 +661,4 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
