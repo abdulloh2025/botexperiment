@@ -451,112 +451,112 @@
 # if __name__ == "__main__":
 #     asyncio.run(main())
 #######################################################################################################################
-import requests           #https://t.me/ValyutaInfo_bot
-from aiogram import Bot, Dispatcher, Router, F
-from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
-import asyncio
-
-BOT_TOKEN = "7896463575:AAENMaxCvJcU3lJYxQaor_MlrckpOJK6T1Y"
-
-# Bot va dispatcher ob'ektlari
-bot = Bot(token=BOT_TOKEN)
-router = Router()
-dp = Dispatcher()
-dp.include_router(router)
-
-# Foydalanuvchi ma'lumotlarini saqlash
-user_data = {}
-
-# Valyuta kurslarini olish funksiyasi
-def get_currency_rate(currency_code):
-    url = "https://cbu.uz/ru/arkhiv-kursov-valyut/json/"
-    response = requests.get(url)
-    if response.status_code == 200:
-        data = response.json()
-        for currency in data:
-            if currency["Ccy"] == currency_code.upper():
-                return currency
-        return None
-    return None
-
-# /start komandasi uchun handler
-@router.message(F.text == "/start")
-async def send_welcome(message: Message):
-    username = message.from_user.username or "Foydalanuvchi"
-    markup = ReplyKeyboardMarkup(keyboard=[
-        [KeyboardButton(text="O'zbek"), KeyboardButton(text="Русский"), KeyboardButton(text="English")]
-    ], resize_keyboard=True)
-
-    user_data[message.from_user.id] = {"language": "uz"}  # Standart til - o'zbek
-
-    await message.answer(
-        f"Salom, @{username}! 😊\nIltimos, tilni tanlang:\nPlease choose your language:\nПожалуйста, выберите язык:",
-        reply_markup=markup
-    )
-
-# Til tanlash uchun handler
-@router.message(F.text.in_(["O'zbek", "Русский", "English"]))
-async def set_language(message: Message):
-    lang_map = {"O'zbek": "uz", "Русский": "ru", "English": "en"}
-    lang = lang_map[message.text]
-    user_data[message.from_user.id]["language"] = lang
-
-    messages = {
-        "uz": "Til muvaffaqiyatli o'zgartirildi! Endi qaysi valyuta kursini bilmoqchisiz?",
-        "ru": "Язык успешно изменён! Какую валюту вы хотите узнать?",
-        "en": "Language successfully changed! Which currency rate would you like to know?"
-    }
-
-    await message.answer(messages[lang])
-
-# Valyuta hisob-kitobi uchun handler
-@router.message(F.text.regexp(r"^\d+\s+[A-Za-z]{3}\s+to\s+[A-Za-z]{3}$"))
-async def convert_currency(message: Message):
-    parts = message.text.split()
-    amount = float(parts[0])
-    from_currency = parts[1].upper()
-    to_currency = parts[3].upper()
-
-    from_rate = get_currency_rate(from_currency)
-    to_rate = get_currency_rate(to_currency)
-
-    if from_rate and to_rate:
-        converted_amount = amount * (float(from_rate['Rate']) / float(to_rate['Rate']))
-        lang = user_data[message.from_user.id]["language"]
-
-        messages = {
-            "uz": f"{amount} {from_currency} ≈ {converted_amount:.2f} {to_currency}",
-            "ru": f"{amount} {from_currency} ≈ {converted_amount:.2f} {to_currency}",
-            "en": f"{amount} {from_currency} ≈ {converted_amount:.2f} {to_currency}"
-        }
-        await message.answer(messages[lang])
-    else:
-        await message.answer("Valyuta kodlari noto'g'ri kiritilgan yoki mavjud emas!")
-
-# Valyuta kodini so'rash uchun handler
-@router.message(F.text.regexp(r"^[A-Za-z]{3}$"))
-async def handle_currency_code(message: Message):
-    currency_code = message.text.strip().upper()
-    currency = get_currency_rate(currency_code)
-    lang = user_data[message.from_user.id]["language"]
-
-    if currency:
-        messages = {
-            "uz": f"💵 {currency['Ccy']} ({currency['CcyNm_UZ']}): {currency['Rate']} so'm",
-            "ru": f"💵 {currency['Ccy']} ({currency['CcyNm_RU']}): {currency['Rate']} сум",
-            "en": f"💵 {currency['Ccy']} ({currency['CcyNm_EN']}): {currency['Rate']} UZS"
-        }
-        await message.answer(messages[lang])
-    else:
-        await message.answer("Valyuta topilmadi. Kodni tekshiring!")
-
-# Asinxron botni ishga tushirish funksiyasi
-async def main():
-    print("Bot ishga tushdi!")
-    await dp.start_polling(bot)
-
-if __name__ == "__main__":
-    asyncio.run(main())
+# import requests           #https://t.me/ValyutaInfo_bot
+# from aiogram import Bot, Dispatcher, Router, F
+# from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton
+# import asyncio
+#
+# BOT_TOKEN = "7896463575:AAENMaxCvJcU3lJYxQaor_MlrckpOJK6T1Y"
+#
+# # Bot va dispatcher ob'ektlari
+# bot = Bot(token=BOT_TOKEN)
+# router = Router()
+# dp = Dispatcher()
+# dp.include_router(router)
+#
+# # Foydalanuvchi ma'lumotlarini saqlash
+# user_data = {}
+#
+# # Valyuta kurslarini olish funksiyasi
+# def get_currency_rate(currency_code):
+#     url = "https://cbu.uz/ru/arkhiv-kursov-valyut/json/"
+#     response = requests.get(url)
+#     if response.status_code == 200:
+#         data = response.json()
+#         for currency in data:
+#             if currency["Ccy"] == currency_code.upper():
+#                 return currency
+#         return None
+#     return None
+#
+# # /start komandasi uchun handler
+# @router.message(F.text == "/start")
+# async def send_welcome(message: Message):
+#     username = message.from_user.username or "Foydalanuvchi"
+#     markup = ReplyKeyboardMarkup(keyboard=[
+#         [KeyboardButton(text="O'zbek"), KeyboardButton(text="Русский"), KeyboardButton(text="English")]
+#     ], resize_keyboard=True)
+#
+#     user_data[message.from_user.id] = {"language": "uz"}  # Standart til - o'zbek
+#
+#     await message.answer(
+#         f"Salom, @{username}! 😊\nIltimos, tilni tanlang:\nPlease choose your language:\nПожалуйста, выберите язык:",
+#         reply_markup=markup
+#     )
+#
+# # Til tanlash uchun handler
+# @router.message(F.text.in_(["O'zbek", "Русский", "English"]))
+# async def set_language(message: Message):
+#     lang_map = {"O'zbek": "uz", "Русский": "ru", "English": "en"}
+#     lang = lang_map[message.text]
+#     user_data[message.from_user.id]["language"] = lang
+#
+#     messages = {
+#         "uz": "Til muvaffaqiyatli o'zgartirildi! Endi qaysi valyuta kursini bilmoqchisiz?",
+#         "ru": "Язык успешно изменён! Какую валюту вы хотите узнать?",
+#         "en": "Language successfully changed! Which currency rate would you like to know?"
+#     }
+#
+#     await message.answer(messages[lang])
+#
+# # Valyuta hisob-kitobi uchun handler
+# @router.message(F.text.regexp(r"^\d+\s+[A-Za-z]{3}\s+to\s+[A-Za-z]{3}$"))
+# async def convert_currency(message: Message):
+#     parts = message.text.split()
+#     amount = float(parts[0])
+#     from_currency = parts[1].upper()
+#     to_currency = parts[3].upper()
+#
+#     from_rate = get_currency_rate(from_currency)
+#     to_rate = get_currency_rate(to_currency)
+#
+#     if from_rate and to_rate:
+#         converted_amount = amount * (float(from_rate['Rate']) / float(to_rate['Rate']))
+#         lang = user_data[message.from_user.id]["language"]
+#
+#         messages = {
+#             "uz": f"{amount} {from_currency} ≈ {converted_amount:.2f} {to_currency}",
+#             "ru": f"{amount} {from_currency} ≈ {converted_amount:.2f} {to_currency}",
+#             "en": f"{amount} {from_currency} ≈ {converted_amount:.2f} {to_currency}"
+#         }
+#         await message.answer(messages[lang])
+#     else:
+#         await message.answer("Valyuta kodlari noto'g'ri kiritilgan yoki mavjud emas!")
+#
+# # Valyuta kodini so'rash uchun handler
+# @router.message(F.text.regexp(r"^[A-Za-z]{3}$"))
+# async def handle_currency_code(message: Message):
+#     currency_code = message.text.strip().upper()
+#     currency = get_currency_rate(currency_code)
+#     lang = user_data[message.from_user.id]["language"]
+#
+#     if currency:
+#         messages = {
+#             "uz": f"💵 {currency['Ccy']} ({currency['CcyNm_UZ']}): {currency['Rate']} so'm",
+#             "ru": f"💵 {currency['Ccy']} ({currency['CcyNm_RU']}): {currency['Rate']} сум",
+#             "en": f"💵 {currency['Ccy']} ({currency['CcyNm_EN']}): {currency['Rate']} UZS"
+#         }
+#         await message.answer(messages[lang])
+#     else:
+#         await message.answer("Valyuta topilmadi. Kodni tekshiring!")
+#
+# # Asinxron botni ishga tushirish funksiyasi
+# async def main():
+#     print("Bot ishga tushdi!")
+#     await dp.start_polling(bot)
+#
+# if __name__ == "__main__":
+#     asyncio.run(main())
 ########################################################################################################################
 # import requests        BU NARHI OSIB KAMAYGANINI KORSATADGONI
 # from aiogram import Bot, Dispatcher, Router, F
@@ -660,3 +660,531 @@ if __name__ == "__main__":
 # if __name__ == "__main__":
 #     asyncio.run(main())
 
+########################################################################################################################
+########################################################################################################################
+# class TALABA_GURUHI:
+#     def __init__(self):
+#         self.talabalar = []
+#
+#     def talaba_qoshish(self, familiya, tugilgan_yili, telefon_nomeri):
+#         talaba = {
+#             'familiya': familiya.strip(),
+#             'tugilgan_yili': tugilgan_yili,
+#             'telefon_nomeri': telefon_nomeri
+#         }
+#         self.talabalar.append(talaba)
+#         print(f"{familiya} guruhga qo'shildi.")
+#
+#     def talaba_izlash(self, key, value):
+#         value = value.lower()
+#         for talaba in self.talabalar:
+#             if talaba[key].lower() == value:
+#                 return talaba
+#         return None
+#
+#     def talaba_ochirish(self, familiya):
+#         familiya = familiya.lower()
+#         for talaba in self.talabalar:
+#             if talaba['familiya'].lower() == familiya:
+#                 self.talabalar.remove(talaba)
+#                 print(f"{talaba['familiya']} guruhdan o'chirildi.")
+#                 return
+#         print(f"{familiya} topilmadi.")
+#
+#     def talabalarni_tartiblash(self, key):
+#         self.talabalar.sort(key=lambda a: a[key])
+#         print(f"Talabalar {key} bo'yicha tartiblandi.")
+#
+#     def talabalarni_korsatish(self):
+#         if not self.talabalar:
+#             print("Guruhda hali hech qanday talaba yo'q.")
+#         else:
+#             for talaba in self.talabalar:
+#                 print(talaba)
+#
+#
+#
+# guruh = TALABA_GURUHI()
+#
+# print("Talaba Tizimi")
+# while True:
+#     print("Ish rejimini tanlang:")
+#     print("1. Talabani qo'shish")
+#     print("2. Talabani izlash")
+#     print("3. Talabalar ro'yxatini tartiblash")
+#     print("4. Chiqish (to'xtatish)")
+#
+#     tanlov = input("Rejimni tanlang (1, 2, 3, 4): ")
+#
+#     if tanlov == '1':
+#         while True:
+#             familiya = input("Familiyasini kiriting: ")
+#             tugilgan_yili = int(input("Tug‘ilgan yilini kiriting: "))
+#             telefon_nomeri = input("Telefon raqamini kiriting: ")
+#             guruh.talaba_qoshish(familiya, tugilgan_yili, telefon_nomeri)
+#
+#             yana = input("Yana talaba qo‘shasizmi? (ha/yo'q): ").lower()
+#             if yana != 'ha':
+#                 break
+#
+#     elif tanlov == '2':
+#         familiya = input("Izlamoqchi bo'lgan talabaning familiyasini kiriting: ")
+#         talaba = guruh.talaba_izlash('familiya', familiya)
+#         if talaba:
+#             print("Topildi:", talaba)
+#             ochirish = input("Bu talabani o'chirmoqchimisiz? (ha/yo'q): ")
+#             if ochirish.lower() == 'ha':
+#                 guruh.talaba_ochirish(familiya)
+#         else:
+#             print("Talaba topilmadi.")
+#
+#     elif tanlov == '3':
+#         print("Talabalar royxati tugilgan yil bo'yicha tartiblanmoqda...")
+#         guruh.talabalarni_tartiblash('tugilgan_yili')
+#         guruh.talabalarni_korsatish()
+#
+#     elif tanlov == '4':
+#         print("Dastur to'xtatildi. Xayr!")
+#         break
+#
+#     else:
+#         print("Noto'g'ri tanlov! Iltimos, 1, 2, 3 yoki 4 ni tanlang.")
+
+########################################################################################################################
+########################################################################################################################
+#
+#
+# import tkinter as tk
+# from tkinter import messagebox
+#
+# class TALABA_GURUHI:
+#     def __init__(self):
+#         self.talabalar = []
+#
+#     def talaba_qoshish(self, familiya, tugilgan_yil, telefon_raqami):
+#         talaba = {
+#             'familiya': familiya.strip(),
+#             'tugilgan_yil': tugilgan_yil,
+#             'telefon_raqami': telefon_raqami
+#         }
+#         self.talabalar.append(talaba)
+#
+#     def talaba_qidirish(self, kalit, qiymat):
+#         qiymat = qiymat.lower()
+#         for talaba in self.talabalar:
+#             if talaba[kalit].lower() == qiymat:
+#                 return talaba
+#         return None
+#
+#     def talaba_ochirish(self, familiya):
+#         familiya = familiya.lower()
+#         for talaba in self.talabalar:
+#             if talaba['familiya'].lower() == familiya:
+#                 self.talabalar.remove(talaba)
+#                 return True
+#         return False
+#
+#     def talabalarni_tartiblash(self, kalit):
+#         self.talabalar.sort(key=lambda t: t[kalit])
+#
+#     def talabalar_royxati(self):
+#         return self.talabalar
+#
+# # GUI qismi
+# guruh = TALABA_GURUHI()
+#
+# def talaba_qoshish_gui():
+#     familiya = kirish_familiya.get()
+#     tugilgan_yil = kirish_tugilgan_yil.get()
+#     telefon_raqami = kirish_telefon.get()
+#
+#     if familiya and tugilgan_yil and telefon_raqami:
+#         try:
+#             guruh.talaba_qoshish(familiya, int(tugilgan_yil), telefon_raqami)
+#             messagebox.showinfo("Muvaffaqiyatli", f"{familiya} muvaffaqiyatli qo‘shildi!")
+#             kirish_familiya.delete(0, tk.END)
+#             kirish_tugilgan_yil.delete(0, tk.END)
+#             kirish_telefon.delete(0, tk.END)
+#         except ValueError:
+#             messagebox.showerror("Xatolik", "Tug‘ilgan yil raqam shaklida bo‘lishi kerak.")
+#     else:
+#         messagebox.showerror("Xatolik", "Barcha maydonlarni to‘ldiring.")
+#
+# def talaba_qidirish_gui():
+#     familiya = kirish_qidirish.get()
+#     if familiya:
+#         talaba = guruh.talaba_qidirish('familiya', familiya)
+#         if talaba:
+#             natija = f"Familiya: {talaba['familiya']}\nTug‘ilgan yili: {talaba['tugilgan_yil']}\nTelefon raqami: {talaba['telefon_raqami']}"
+#             messagebox.showinfo("Topildi", natija)
+#         else:
+#             messagebox.showwarning("Topilmadi", "Bunday talaba topilmadi.")
+#     else:
+#         messagebox.showerror("Xatolik", "Familiyani kiriting.")
+#
+# def talaba_ochirish_gui():
+#     familiya = kirish_qidirish.get()
+#     if familiya:
+#         muvaffaqiyat = guruh.talaba_ochirish( familiya)
+#         if muvaffaqiyat:
+#             messagebox.showinfo("O'chirildi", f"{familiya} guruhdan o‘chirildi.")
+#         else:
+#             messagebox.showwarning("Topilmadi", "Bunday talaba topilmadi.")
+#     else:
+#         messagebox.showerror("Xatolik", "Familiyani kiriting.")
+#
+# def talabalarni_korsatish_gui():
+#     guruh.talabalarni_tartiblash('tugilgan_yil')
+#     talabalar = guruh.talabalar_royxati()
+#     royxat_list.delete(0, tk.END)
+#     for talaba in talabalar:
+#         royxat_list.insert(tk.END, f"{talaba['familiya']} - {talaba['tugilgan_yil']} - {talaba['telefon_raqami']}")
+#
+# # Asosiy oynani yaratish
+# oyna = tk.Tk()
+# oyna.title("Talabalar Guruhi")
+# oyna.geometry("500x600")
+#
+# # Talaba qo‘shish
+# tk.Label(oyna, text="Talaba qo‘shish", font=('Times New Roman', 14)).pack(pady=10)
+#
+# tk.Label(oyna, text="Familiya:").pack()
+# kirish_familiya = tk.Entry(oyna)
+# kirish_familiya.pack()
+#
+# tk.Label(oyna, text="Tug‘ilgan yili:").pack()
+# kirish_tugilgan_yil = tk.Entry(oyna)
+# kirish_tugilgan_yil.pack()
+#
+# tk.Label(oyna, text="Telefon raqami:").pack()
+# kirish_telefon = tk.Entry(oyna)
+# kirish_telefon.pack()
+#
+# tk.Button(oyna, text="Talaba qo‘shish", command=talaba_qoshish_gui).pack(pady=10)
+#
+# # Talaba izlash va o‘chirish
+# tk.Label(oyna, text="Talaba izlash / o‘chirish", font=('Times New Roman', 14)).pack(pady=10)
+#
+# tk.Label(oyna, text="Familiya:").pack()
+# kirish_qidirish = tk.Entry(oyna)
+# kirish_qidirish.pack()
+#
+# tk.Button(oyna, text="Talabani izlash", command=talaba_qidirish_gui).pack(pady=5)
+# tk.Button(oyna, text="Talabani o‘chirish", command=talaba_ochirish_gui).pack(pady=5)
+#
+# # Talabalar ro‘yxatini ko‘rsatish
+# tk.Button(oyna, text="Talabalarni ko‘rsatish va tartiblash", command=talabalarni_korsatish_gui).pack(pady=10)
+#
+# royxat_list = tk.Listbox(oyna, width=60)
+# royxat_list.pack(pady=10)
+#
+# oyna.mainloop()
+
+########################################################################################################################
+########################################################################################################################
+
+
+
+
+
+#burish[i][j] = matrix[i][j] 360 chapka va onga burganda
+# [n - j - 1][i] 90 chapka
+# [j][n - i - 1] 90 onga
+# [n - i - 1][n - j - 1] 180 chapka
+# 270 giradus chapka burish 90onga teng
+# 270 giradus onga burish 90chapiga teng
+
+
+#
+#
+# #
+# def matritsani_90_gradus_chapga_burish(matrix):
+#     n = len(matrix)
+#     burish = [[0] * n for _ in range(n)]
+#     for i in range(n):
+#         for j in range(n):
+#             burish[j][n - i - 1]= matrix[i][j]
+#     return burish
+#
+#
+# def chiqarish_matrix(matrix):
+#     for qator in matrix:
+#         print(qator)
+#
+# n = int(input("Matritsa o'lchamini kiriting (n): "))
+# matrix = []
+#
+# print("Matritsa elementlarini kiriting:")
+# for i in range(n):
+#     qator = list(map(int, input(f"{i+1}-qator elementlari: ").split()))
+#     matrix.append(qator)
+#
+# print("Boshlangich matritsa:")
+# chiqarish_matrix(matrix)
+#
+# aylantirilgan_matritsa = matritsani_90_gradus_chapga_burish(matrix)
+#
+# print("90 ga soat millariga teskari burilgan matritsa:")
+# chiqarish_matrix(aylantirilgan_matritsa)
+#
+
+
+########################################################################################################################
+########################################################################################################################
+
+
+# n = int(input("Nechta haqiqiy son kiritasiz?: "))
+# koeff = [1]
+# if n == 15:
+#    for i in range(1,n):
+#            yangi = [0] * (len(koeff) + 1)
+#            for i in range(len(koeff)):
+#                yangi[i] -= koeff[i] * i  # (x - a) qismini ochish: -a * oldingi
+#                yangi[i + 1] += koeff[i]  # x * oldingi
+#            koeff = yangi
+#            print(koeff)
+#    print(n)
+#
+# else:
+#     print("15 bolishi kerak chunki sharti shunday korsatilgan")
+# #(x - 1)(x - 2)(x - 3)(x- 4)
+
+# # Dastlabki koeffitsiyentlar [1] => bu 1*x^0 ya'ni 1
+
+########################################################################################################################
+####################################################################################################################
+# #
+#
+# class _CHIQARISH:
+#     def __init__(self, son, uzunlik, kasr_raqamlar):
+#         self.son = son
+#         self.uzunlik = uzunlik
+#         self.kasr_raqamlar = kasr_raqamlar
+#
+#     def formatla(self, satr):
+#         if '.' not in satr:
+#             satr += '.'
+#
+#         butun_qism, kasr_qism = satr.split('.')
+#
+#         kasr_qism = kasr_qism[:self.kasr_raqamlar]
+#         while len(kasr_qism) < self.kasr_raqamlar:
+#             kasr_qism += '0'
+#
+#         natija = butun_qism + '.' + kasr_qism
+#
+#         if len(natija) < self.uzunlik:
+#             bosh_joy = self.uzunlik - len(natija)
+#             natija = ' ' * bosh_joy + natija
+#         else:
+#             natija = natija[:self.uzunlik]
+#
+#         return natija
+#
+#     def chiqar(self):
+#         satr = f"{self.son:.{self.kasr_raqamlar}f}"
+#         formatlangan = self.formatla(satr)
+#         print(formatlangan)
+#
+#
+# class IKKILIK_CHIQARISH(_CHIQARISH):
+#     def chiqar(self):
+#         butun = int(self.son)
+#         kasr = self.son - butun
+#
+#         butun_ikkilik = ''
+#         if butun == 0:
+#             butun_ikkilik = '0'
+#         else:
+#             while butun > 0:
+#                 butun_ikkilik = str(butun % 2) + butun_ikkilik
+#                 butun //= 2
+#
+#         kasr_ikkilik = ''
+#         for _ in range(self.kasr_raqamlar):
+#             kasr *= 2
+#             raqam = int(kasr)
+#             kasr_ikkilik += str(raqam)
+#             kasr -= raqam
+#
+#         satr = butun_ikkilik + '.' + kasr_ikkilik
+#         formatlangan = self.formatla(satr)
+#         print(formatlangan)
+#
+#
+# class SAKKIZLIK_CHIQARISH(_CHIQARISH):
+#     def chiqar(self):
+#         butun = int(self.son)
+#         kasr = self.son - butun
+#
+#         butun_sakkizlik = ''
+#         if butun == 0:
+#             butun_sakkizlik = '0'
+#         else:
+#             while butun > 0:
+#                 butun_sakkizlik = str(butun % 8) + butun_sakkizlik
+#                 butun //= 8
+#
+#         kasr_sakkizlik = ''
+#         for _ in range(self.kasr_raqamlar):
+#             kasr *= 8
+#             raqam = int(kasr)
+#             kasr_sakkizlik += str(raqam)
+#             kasr -= raqam
+#
+#         satr = butun_sakkizlik + '.' + kasr_sakkizlik
+#         formatlangan = self.formatla(satr)
+#         print(formatlangan)
+#
+#
+# class ONOLTI_CHIQARISH(_CHIQARISH):
+#     def chiqar(self):
+#         butun = int(self.son)
+#         kasr = self.son - butun
+#
+#         belgilar = "0123456789ABCDEF"
+#         butun_onolti = ''
+#         if butun == 0:
+#             butun_onolti = '0'
+#         else:
+#             while butun > 0:
+#                 qoldiq = butun % 16
+#                 butun_onolti = belgilar[qoldiq] + butun_onolti
+#                 butun //= 16
+#
+#         kasr_onolti = ''
+#         for _ in range(self.kasr_raqamlar):
+#             kasr *= 16
+#             raqam = int(kasr)
+#             kasr_onolti += belgilar[raqam]
+#             kasr -= raqam
+#
+#         satr = butun_onolti + '.' + kasr_onolti
+#         formatlangan = self.formatla(satr)
+#         print(formatlangan)
+
+#
+# print("10lik:")
+# _CHIQARISH(3.14, 15, 6).chiqar()
+#
+# print("2lik:")
+# IKKILIK_CHIQARISH(3.14, 15, 6).chiqar()
+#
+# print("8lik:")
+# SAKKIZLIK_CHIQARISH(3.14, 15, 6).chiqar()
+#
+# print("16lik:")
+# ONOLTI_CHIQARISH(3.14, 15, 6).chiqar()
+
+
+#
+# def daraja(x, k, epsilon=0.0001):
+#     y = 1
+#     while True:
+#         y_navbatagi = y + (x / (y ** (k - 1)) - y) / k
+#         if abs(y_navbatagi - y) < epsilon:
+#             break
+#         y = y_navbatagi
+#     return y_navbatagi
+#
+# a = float(input(" qiymatini kiriting: "))
+# yuqori = daraja(a, 3) - daraja(a**2 + 1, 6)
+# pastki = 1 + daraja(3 + a, 7)
+#
+# natija = yuqori / pastki
+# print(f"Natija: {natija:.6f}")
+
+#
+# lst = [1, 2, 3, 4, 0, 3, 4, 2, 1, 6, 6, 0, 1, 2, 3]
+#
+# # 0 lar turgan indekslarni topamiz
+# zero_indices = [i for i, val in enumerate(lst) if val == 0]
+#
+# # Agar kamida 2 ta 0 bo‘lsa, ular ORASIDAGI + 0 larni ham qo‘shamiz
+# if len(zero_indices) >= 2:
+#     start = zero_indices[0]       # 0 ni o'zini ham olamiz
+#     end = zero_indices[1] + 1     # ikkinchi 0 ni ham olamiz
+#     result = sum(lst[start:end])
+#     print("Yig'indisi (0 lar ham qo‘shilgan):", result)
+# else:
+#     print("Kamida 2 ta nol kerak")
+
+
+import json
+#
+# # Oddiy Python dictionary
+# data = {
+#     "ism": "Ali",
+#     "yosh": 25,
+#     "talaba": True,
+#     "fanlar": ["Matematika", "Fizika"],
+#     "manzil": {
+#         "shahar": "Toshkent",
+#         "pochta": 100100
+#     }
+# }
+#
+# # JSON formatga o‘tkazish (matn ko‘rinishida)
+# json_data = json.dumps(data, indent=4, ensure_ascii=False)
+# print(json_data)
+
+
+
+import json
+# 1. JSON faylga yozish
+# yangi_foydalanuvchi = {
+#     "ismi": "Anvar",
+#     "yosh": 21,
+#     "status": "talaba"
+# }
+#
+# with open("foydalanuvchilar.json", "w", encoding='utf-8') as f:
+#     json.dump(yangi_foydalanuvchi, f, indent=4, ensure_ascii=False)
+#
+# # 2. JSON fayldan o‘qish
+# with open("foydalanuvchilar.json", "r", encoding='utf-8') as f:
+#     data = json.load(f)
+# print("Fayldan o‘qilgan ma’lumot:", data)
+#
+# # 3. Ma'lumotni tahrirlash
+# data["yosh"] = 22
+# print("Tahrirlangan ma’lumot:", data)
+#
+# # 4. Qayta yozib qo‘yish
+# with open("foydalanuvchilar.json", "w", encoding='utf-8') as f:
+#     json.dump(data, f, indent=4, ensure_ascii=False)
+# print("Yangilangan ma’lumot faylga yozildi.")
+#
+
+
+# import json
+#
+# # Oddiy Python dictionary
+# data = {
+#     "ism": "Ali",
+#     "yosh": 25,
+#     "talaba": True,
+#     "fanlar": ["Matematika", "Fizika"],
+#     "manzil": {
+#         "shahar": "Toshkent",
+#         "pochta": 100100
+#     }
+# }
+#
+# # JSON formatga o‘tkazish (matn ko‘rinishida)
+# json_data = json.dumps(data, indent=4, ensure_ascii=False)
+# print(json_data)
+
+#
+#
+# import json
+# import gzip
+#
+# data = {"ism": "Sardor", "rol": "admin", "parol": "123456"}
+#
+# with gzip.open("xavfsiz_data.json.gz", "wt", encoding="utf-8") as f:
+#     json.dump(data, f, indent=4, ensure_ascii=False)
+#
+# with gzip.open("xavfsiz_data.json.gz", "rt", encoding="utf-8") as f:
+#     yuklangan_malumot = json.load(f)
+#     print(yuklangan_malumot)
