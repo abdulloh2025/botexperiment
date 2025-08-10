@@ -1144,12 +1144,12 @@ pYTHON
 # natija = boluvchilar(son , boluvchilar_sonlar)
 # print(natija)
 #
-
-
-a = [3 ,4, 2]
-n = int(input("son kiriting: "))
-if n % a[0] !=0:
-    print(False )
+#
+#
+# a = [3 ,4, 2]
+# n = int(input("son kiriting: "))
+# if n % a[0] !=0:
+#     print(False )
 
 
 

@@ -783,12 +783,10 @@ from os.path import split
 #     main()
 
 ##################################################################
-# 7751444752:AAEfmgzmAU8CEDxV5j5ALxx6RaqpjilORH8
 from telegram import Update
 from telegram.ext import Application, CommandHandler, ContextTypes
 
-# Telegram bot tokeningizni shu yerga kiriting
-# BotFather orqali yangi bot yaratganingizda olasiz
+
 TOKEN = "7751444752:AAEfmgzmAU8CEDxV5j5ALxx6RaqpjilORH8"
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -812,12 +810,6 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
 
 
 

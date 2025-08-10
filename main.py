@@ -1188,3 +1188,181 @@ import json
 # with gzip.open("xavfsiz_data.json.gz", "rt", encoding="utf-8") as f:
 #     yuklangan_malumot = json.load(f)
 #     print(yuklangan_malumot)
+
+#
+#
+#
+#
+#
+#
+# import csv
+# from collections import Counter, defaultdict
+#
+# def yuklab_ol(anketa_fayl):
+#     talabalar = []
+#     with open(anketa_fayl, encoding='utf-8') as f:
+#         reader = csv.reader(f)
+#         for row in reader:
+#             familiya, ism, sharif, jinsi, yosh, bosqich = row
+#             talabalar.append({
+#                 'familiya': familiya.strip(),
+#                 'ism': ism.strip(),
+#                 'sharif': sharif.strip(),
+#                 'jinsi': jinsi.strip().upper(),
+#                 'yosh': int(yosh),
+#                 'bosqich': int(bosqich)
+#             })
+#     return talabalar
+#
+# def eng_kop_erkak_bosqich(talabalar):
+#     erkak_bosqichlar = Counter()
+#     for t in talabalar:
+#         if t['jinsi'] == 'E':
+#             erkak_bosqichlar[t['bosqich']] += 1
+#     return erkak_bosqichlar.most_common(1)[0][0]
+#
+# def eng_kop_ismlar(talabalar):
+#     erkak_ismlar = Counter()
+#     ayol_ismlar = Counter()
+#     for t in talabalar:
+#         if t['jinsi'] == 'E':
+#             erkak_ismlar[t['ism']] += 1
+#         elif t['jinsi'] == 'A':
+#             ayol_ismlar[t['ism']] += 1
+#     eng_kop_erkak = erkak_ismlar.most_common(1)[0][0] if erkak_ismlar else None
+#     eng_kop_ayol = ayol_ismlar.most_common(1)[0][0] if ayol_ismlar else None
+#     return eng_kop_erkak, eng_kop_ayol
+#
+# def kop_qaytarilgan_yosh_va_sharif_qizlar(talabalar):
+#     kombinatsiya = defaultdict(list)  # (yosh, sharif) -> familiyalar
+#     kombinatsiya_soni = Counter()
+#
+#     for t in talabalar:
+#         if t['jinsi'] == 'A':
+#             key = (t['yosh'], t['sharif'])
+#             kombinatsiya[key].append(t['familiya'])
+#             kombinatsiya_soni[key] += 1
+#
+#     if not kombinatsiya_soni:
+#         return []
+#
+#     eng_kop_comb = kombinatsiya_soni.most_common(1)[0][0]
+#     familiyalar = kombinatsiya[eng_kop_comb]
+#     return sorted(set(familiyalar))
+#
+# # ------------ Foydalanish ------------
+#
+# fayl_nomi = 'ANKETA.csv'  # Fayl nomi
+# talabalar = yuklab_ol(fayl_nomi)
+#
+# # a) Erkaklar soni eng ko‘p bo‘lgan bosqich
+# print("a) Eng ko‘p erkaklar bor bosqich:", eng_kop_erkak_bosqich(talabalar))
+#
+# # b) Eng ko‘p tarqalgan erkak va ayol ismlar
+# erkak_ism, ayol_ism = eng_kop_ismlar(talabalar)
+# print("b) Eng ko‘p erkak ismi:", erkak_ism)
+# print("   Eng ko‘p ayol ismi:", ayol_ism)
+#
+# # d) Yoshi va sharifi bir xil bo‘lgan qizlar familiyasi (alfavit bo‘yicha)
+# familiyalar = kop_qaytarilgan_yosh_va_sharif_qizlar(talabalar)
+# print("d) Eng ko‘p (yosh+sharif) kombinatsiyasiga ega qizlar familiyalari:")
+# for f in familiyalar:
+#     print(" -", f)
+
+
+
+
+
+
+
+import pygame
+import sys
+import math
+
+# Pygame'ni boshlash
+pygame.init()
+
+# Oyna o'lchami
+kengligi, balandligi = 800, 600
+oyna = pygame.display.set_mode((kengligi, balandligi))
+pygame.display.set_caption("Dumalayotgan G'ildirak")
+
+# Ranglar
+WHITE = (255, 255, 255)
+BLACK = (0, 0, 0)
+
+# G'ildirak parametrlari
+radius = 50
+x = radius
+y = balandligi // 2
+tezlik =  2  # O'zgarmas tezlik
+burchak = 0  # Dastlabki burchak
+
+soat = pygame.time.Clock()
+
+# Asosiy tsikl
+while True:
+    for hodisa in pygame.event.get():
+        if hodisa.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+    # Ekranni tozalash
+    oyna.fill(WHITE)
+
+    # G'ildirak markazi koordinatasi
+    markaz = (int(x), int(y))
+
+    # G'ildirakni chizish  doira
+    pygame.draw.circle(oyna, BLACK, markaz, radius, 3)
+
+    # G'ildirak ustida chiziq (aylanayotganini ko‘rsatish uchun)
+    chiziq_uzunligi = radius
+    oxiri_x = x + chiziq_uzunligi * math.cos(burchak)
+    oxiri_y = y + chiziq_uzunligi * math.sin(burchak)
+    pygame.draw.line(oyna, BLACK, markaz, (oxiri_x, oxiri_y), 3)
+
+    # Harakat va burchakni yangilash
+    x += tezlik
+    burchak -= tezlik / radius  # Radiusga nisbatan dumalash
+
+    # Ekrandan chiqib ketmasligi uchun
+    if x - radius > kengligi:  # o‘ngdan chiqib ketsa
+        x = -radius
+
+    pygame.display.flip()
+    soat.tick(60)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    # if x + radius < 0:  # chapdan chiqib ketsa
+    #     x = kengligi + radius

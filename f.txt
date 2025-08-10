@@ -1,0 +1,5 @@
+salom bu, dasturlash tili.
+hello, world.
+hi, salom.
+
+
