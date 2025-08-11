@@ -25,13 +25,8 @@
 # b = int(input("kubning tomonini kiriting:"))
 # As = 6*b**2
 # print(As)
-import math
-import random
-from ctypes import pythonapi
-from traceback import print_tb
 
 
-# from email.charset import ALIASES
 
 
 # a = int(input("kubning tomonini kiriting:"))
@@ -1150,6 +1145,8 @@ pYTHON
 # n = int(input("son kiriting: "))
 # if n % a[0] !=0:
 #     print(False )
+
+
 
 
 
