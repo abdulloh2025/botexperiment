@@ -4,4 +4,6 @@ if salom == i :
     print("Tori")
 else:
     print("Hato yana urinib kor")
+print("zor")
+
 
