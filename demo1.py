@@ -5,5 +5,6 @@ if salom == i :
 else:
     print("Hato yana urinib kor")
 print("zor")
+print("zor1")
 
 
