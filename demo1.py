@@ -9,5 +9,5 @@ print("zor1")
 print("a")
 print("b")
 print("d")
-
+print("ss")
 
