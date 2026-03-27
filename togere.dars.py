@@ -1146,3 +1146,72 @@ pYTHON
 # if n % a[0] !=0:
 #     print(False )
 
+def main():
+    # 1. Bilimlar bazasi (Qoidalar lug'ati)
+    qoidalar_bazasi = {
+        "P1": [["0 dan past", "qor"], "yo'l muzlagan"],
+        "P2": [["yo'l muzlagan", "piyoda (yayov)"], "etik kiyish"],
+        "P3": [["0-20 oraliqda", "yomg'ir"], "yo'l ho'l"],
+        "P4": [["yo'l ho'l", "kuchli"], "kurtka kiyish"],
+        "P5": [["30 dan yuqori", "yo'q (ochiq)"], "jazirama"],
+        "P6": [["jazirama", "vaqt 12:00-17:00"], "konditsionerli bino"],
+        "P7": [["kuchli", "yo'q (ochiq)"], "chang-to'zon"],
+        "P8": [["chang-to'zon", "ko'chada bo'lish"], "niqob taqish"],
+        "P9": [["0 dan past", "kuchli"], "bo'ron"],
+        "P10": [["bo'ron", "ko'rinish yomon"], "uyda qolish"]
+    }
+
+    while True:
+        print("\n" + "=" * 40)
+        print("=== EKSPERT TIZIMI (OB-HAVO) ===")
+        print("=" * 40)
+
+        holat = set()
+
+        # 2. Atribut va Qiymat kiritish qismi
+        print("Ma'lumotlarni kiriting (To'xtatish uchun qiymatga '0' kiriting):")
+        while True:
+            atribut = input("\nAtribut nomini kiriting (masalan: Harorat): ").strip()
+            qiymat = input(f"{atribut} uchun qiymatni kiriting: ").lower().strip()
+
+            if qiymat == '0' or atribut == '0':
+                break
+
+            holat.add(qiymat)
+
+        # 3. Mantiqiy chiqarish (Forward Chaining)
+        print("\n--- TAHLIL JARAYONI ---")
+        yangi_xulosa = True
+        while yangi_xulosa:
+            yangi_xulosa = False
+
+            for p_nomi, p_shartlari in qoidalar_bazasi.items():
+                shartlar = p_shartlari[0]
+                natija = p_shartlari[1]
+
+                # Bitta umumiy if: hamma shartlar borligini tekshiradi
+                if all(s in holat for s in shartlar) and natija not in holat:
+                    holat.add(natija)
+                    print(f"✅ {p_nomi} ishga tushdi: {shartlar} -> Aniqlandi: {natija}")
+                    yangi_xulosa = True
+
+        # 4. Natijalarni ko'rsatish
+        tavsiyalar = [k for k in holat if any(k == p[1] for p in qoidalar_bazasi.values() if
+                                              any(soz in k for soz in ["kiyish", "bino", "qolish", "taqish"]))]
+
+        if tavsiyalar:
+            print("\n💡 YAKUNIY TAVSIYALAR:")
+            for t in tavsiyalar:
+                print(f"- {t.upper()}")
+        else:
+            print("\n🤷 Hozircha qo'shimcha tavsiyalar yo'q.")
+
+        # 5. Qayta boshlash yoki tugatish
+        tanlov = input("\nYana ma'lumot kiritasizmi? (1 - Ha / 0 - Yo'q): ")
+        if tanlov != '1':
+            print("Dastur tugatildi. Salomat bo'ling!")
+            break
+
+
+if __name__ == "__main__":
+    main()

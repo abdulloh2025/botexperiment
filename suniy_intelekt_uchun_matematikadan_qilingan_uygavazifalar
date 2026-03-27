@@ -1,0 +1,263 @@
+1-topshiriq
+# def chiziqli_funktsiya(k, b, x):
+#     y = k * x + b
+#     return y
+# natija = chiziqli_funktsiya(2, -4, 3)
+# print(natija)
+# def funksiyalarni_hisobla():
+#     sanash = 0
+#
+#     for x in range(0, 6):
+#         y1 = 2 * x + 1
+#         y2 = -x + 7
+#
+#         print(f"x = {x}, y1 = {y1}, y2 = {y2}", end=" -> ")
+#
+#         if y1 > y2:
+#             print("y1 katta")
+#             sanash += 1
+#         elif y2 > y1:
+#             print("y2 katta")
+#         else:
+#             print("ikkalasi teng")
+#
+#     print("\ny1 > y2 bo‘lgan holatlar soni:", sanash)
+# funksiyalarni_hisobla()
+
+# ballar = []
+# yuqori_70 = 0
+#
+# for x in range(0, 11):
+#     ball = 5 * x + 40
+#     ballar.append(ball)
+#
+#     if ball > 70:
+#         yuqori_70 += 1
+#
+# eng_katta = max(ballar)
+# eng_kichik = min(ballar)
+#
+# print("Ballar royxati:", ballar)
+# print("70 dan yuqori ballar soni:", yuqori_70)
+# print("Eng katta ball:", eng_katta)
+# print("Eng kichik ball:", eng_kichik)
+
+2-topshiriq
+import math
+import random
+
+
+n_soni = int(input("Nechta nuqta bo'lsin: "))
+k_soni = int(input("Nechta klaster bo'lsin: "))
+olcham = int(input("Fazo o'lchami (2 yoki 3): "))
+
+
+nuqtalar = []
+for i in range(n_soni):
+    nuqta = []
+    for j in range(olcham):
+        nuqta.append(random.randint(1, 100))
+    print(f"{i + 1}-nuqta: {nuqta}")
+    nuqtalar.append(nuqta)
+
+
+markazlar = random.sample(nuqtalar, k_soni)
+
+
+def masofani_hisobla(n1, n2):
+    yigindi = 0
+    for i in range(len(n1)):
+        yigindi = yigindi + (n2[i] - n1[i]) ** 2
+    return math.sqrt(yigindi)
+
+
+
+qadam = 0
+while True:
+    qadam = qadam + 1
+
+    klasterlar = []
+    for i in range(k_soni):
+        klasterlar.append([])
+
+
+    for nuqta in nuqtalar:
+        masofalar = []
+        for m in markazlar:
+            masofalar.append(masofani_hisobla(nuqta, m))
+
+        eng_kichik = min(masofalar)
+        klaster_raqami = masofalar.index(eng_kichik)
+        klasterlar[klaster_raqami].append(nuqta)
+
+
+    yangi_markazlar_ruyxati = []
+    for i in range(k_soni):
+        if len(klasterlar[i]) > 0:
+            yangi_markaz = []
+            for d in range(olcham):
+                jami = 0
+                for n in klasterlar[i]:
+                    jami = jami + n[d]
+                yangi_markaz.append(jami / len(klasterlar[i]))
+            yangi_markazlar_ruyxati.append(yangi_markaz)
+        else:
+            yangi_markazlar_ruyxati.append(markazlar[i])
+
+
+    if yangi_markazlar_ruyxati == markazlar:
+        break
+
+    markazlar = yangi_markazlar_ruyxati
+
+
+print(f"\nSikl {qadam} qadamda to'xtadi.")
+for i in range(k_soni):
+    yaxlitlangan = [round(c, 2) for c in markazlar[i]]
+    print(f"{i + 1}-klaster markazi: {yaxlitlangan}")
+    print(f"Nuqtalar soni: {len(klasterlar[i])}")
+
+
+
+
+
+# import math
+# kitoblar = {
+#     "Matematika": [5, 2, 1],
+#     "Python ": [2, 5, 0],
+#     "Ingliz tili lug'at": [1, 1, 5]
+# }
+#
+#
+# def kosinus_hisobla(v1, v2):
+#     skalyar = 0
+#     for i in range(len(v1)):
+#         skalyar = skalyar + (v1[i] * v2[i])
+#
+#     kvadrat_yigindi1 = 0
+#     for son in v1:
+#         kvadrat_yigindi1 = kvadrat_yigindi1 + (son * son)
+#     uzunlik1 = math.sqrt(kvadrat_yigindi1)
+#
+#     kvadrat_yigindi2 = 0
+#     for son in v2:
+#         kvadrat_yigindi2 = kvadrat_yigindi2 + (son * son)
+#     uzunlik2 = math.sqrt(kvadrat_yigindi2)
+#
+#     if uzunlik1 == 0 or uzunlik2 == 0:
+#         return 0
+#
+#     natija = skalyar / (uzunlik1 * uzunlik2)
+#     return natija
+#
+# def main():
+#     print(" Kitob tavsiya qilish tizimi ")
+#
+#     m = int(input("Matematikaga qiziqish (1-5): "))
+#     d = int(input("Dasturlashga qiziqish (1-5): "))
+#     i = int(input("Ingliz tiliga qiziqish (1-5): "))
+#
+#     talaba_vektori = [m, d, i]
+#
+#     if m == 0 and d == 0 and i == 0:
+#         print("\nSiz hech qaysi fanga qiziqmaysiz, shuning uchun sizga kitob tavsiya qilolmaymiz.")
+#         return
+#
+#     eng_yaxshi_moslik = -1
+#     tavsiya_etilgan_kitob = ""
+#
+#     print("\nNatijalar:")
+#     for nom in kitoblar:
+#         vektor = kitoblar[nom]
+#         oxshashlik = kosinus_hisobla(talaba_vektori, vektor)
+#
+#         print(nom, "bilan o'xshashlik:", round(oxshashlik, 4))
+#
+#         if oxshashlik > eng_yaxshi_moslik:
+#             eng_yaxshi_moslik = oxshashlik
+#             tavsiya_etilgan_kitob = nom
+#     if m == d and d == i:
+#         if m == 5:
+#             print("Siz Matematika , Python , Ingliz tili ga qiziqasiz .")
+#     else:
+#         print("\nSizga eng mos keladigan kitob:", tavsiya_etilgan_kitob)
+#
+# main()
+#
+#
+#
+# malumot = [
+#     ("Ha", "Ha", 30),
+#     ("Ha", "Yo‘q", 10),
+#     ("Yo‘q", "Ha", 20),
+#     ("Yo‘q", "Yo‘q", 40)
+# ]
+#
+#
+# gripp = {}
+# isitma = {}
+# birgalikda = {}
+#
+# for g_korinishi, i_korinishi, soni in malumot:
+#     if g_korinishi not in gripp:
+#         gripp[g_korinishi] = 0
+#     gripp[g_korinishi] += soni
+#
+#
+#     if i_korinishi not in isitma:
+#         isitma[i_korinishi] = 0
+#     isitma[i_korinishi] += soni
+#
+#     birgalikda[(g_korinishi, i_korinishi)] = soni
+#
+#
+# print("P(Isitma | Gripp)")
+# for qiymat in birgalikda:
+#     g_qiymat, i_qiymat = qiymat
+#     natija = birgalikda[qiymat] / gripp[g_qiymat]
+#     print(f"P(Isitma={i_qiymat} | Gripp={g_qiymat}) = {natija}")
+#
+# print("\nP(Gripp | Isitma)")
+# for qiymat in birgalikda:
+#     g_qiymat, i_qiymat = qiymat
+#     natija = birgalikda[qiymat] / isitma[i_qiymat]
+#     print(f"P(Gripp={g_qiymat} | Isitma={i_qiymat}) = {natija}")
+
+#
+# import random
+# import matplotlib.pyplot as plt
+#
+# tajribalar_soni = 10000
+# statistika = []
+# gerb_soni = 0
+# raqam_soni = 0
+#
+# for qadam in range(1, tajribalar_soni + 1):
+#     tanga = random.randint(0, 1)
+#
+#     if tanga == 1:
+#         gerb_soni += 1
+#     else:
+#         raqam_soni += 1
+#
+#     statistika.append((gerb_soni / qadam, raqam_soni / qadam))
+#
+# print(f"Oxirgi natija (Gerb/Raqam ulushi): {statistika[-1]}")
+#
+# # Grafik qismi
+# x_axis = list(range(1, tajribalar_soni + 1))
+# gerb_ulushi = [s[0] for s in statistika]
+# raqam_ulushi = [s[1] for s in statistika]
+#
+# plt.figure(figsize=(11, 5))
+# plt.plot(x_axis, gerb_ulushi, label="Gerb ulushi", color="blue", linewidth=1)
+# plt.plot(x_axis, raqam_ulushi, label="Raqam ulushi", color="orange", linewidth=1)
+# plt.axhline(0.5, color='black', linestyle=':', label="Ideal (0.5)")
+#
+# plt.title("Katta sonlar qonuni: Ulushlarning 0.5 ga yaqinlashishi")
+# plt.xlabel("Tashlashlar soni")
+# plt.ylabel("Ehtimollik ulushi")
+# plt.legend()
+# plt.grid(alpha=0.3)
+# plt.show()
+
