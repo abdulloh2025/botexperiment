@@ -1,85 +1,55 @@
-import math
+import random
+import matplotlib.pyplot as plt
 
-fayl_nomi = "Volki_Sobaki.tbl"
-malumotlar = {}
-
-f = open(fayl_nomi, mode="r")
-for qator in f:
-    qismlar = qator.split()
-    if not qismlar: continue
-
-    sonlar = []
-    for x in qismlar:
-        sonlar.append(float(x))
-
-    sinf = int(sonlar[0])
-    alomatlar = sonlar[1:]
-
-    if sinf not in malumotlar:
-        malumotlar[sinf] = []
-    malumotlar[sinf].append(alomatlar)
-f.close()
+def suniy_hayot_avtomati(qoida_raqami, qadamlar_soni, kenglik):
+    qoida_ikkilik = format(qoida_raqami, '08b')
 
 
-def evklid(v1, v2):
-    k = 0
-    for i in range(len(v1)):
-        k += (v1[i] - v2[i]) ** 2
-    return math.sqrt(k)
+    qoidalar = {
+        (1, 1, 1): int(qoida_ikkilik[0]),
+        (1, 1, 0): int(qoida_ikkilik[1]),
+        (1, 0, 1): int(qoida_ikkilik[2]),
+        (1, 0, 0): int(qoida_ikkilik[3]),
+        (0, 1, 1): int(qoida_ikkilik[4]),
+        (0, 1, 0): int(qoida_ikkilik[5]),
+        (0, 0, 1): int(qoida_ikkilik[6]),
+        (0, 0, 0): int(qoida_ikkilik[7])
+    }
 
 
-def manhetten(nu1, nu2):
-    s = 0
-    for i in range(len(nu1)):
-        s += abs(nu1[i] - nu2[i])
-    return s
+    hozirgi_qator = [random.randint(0, 1) for i in range(kenglik)]
 
+    matritsa = [hozirgi_qator]
 
-def chebyshev(nu1, nu2):
-    farqlar = []
-    for i in range(len(nu1)):
-        farqlar.append(abs(nu1[i] - nu2[i]))
-    return max(farqlar)
+    for i in range(qadamlar_soni - 1):
+        keyingi_qator = []
+        for i in range(kenglik):
+            # Qo'shnilar: chap, markaz va o'ng katak
+            chap = hozirgi_qator[(i - 1) % kenglik]
+            markaz = hozirgi_qator[i]
+            ong = hozirgi_qator[(i + 1) % kenglik]
 
+            # Yangi holatni jadvaldan aniqlash
+            yangi_holat = qoidalar[(chap, markaz, ong)]
+            keyingi_qator.append(yangi_holat)
 
-def kn_n(lugat, nuqta, func):
-    p = []
-    for key, values in lugat.items():
-        for value in values:
-            l_masofa = func(nuqta, value)
-            p.append((key, l_masofa))
+        hozirgi_qator = keyingi_qator
+        matritsa.append(hozirgi_qator)
 
-    saralangan = sorted(p, key=lambda x: x[1])
+    return matritsa
 
-    k = int(input("k ni kiritng: "))
-    yaqinlar = saralangan[:k]
+QOIDA = 98
+QADAMLAR = 32
+KENGLIK = 32
 
-    sinflar = []
-    for i in yaqinlar:
-        sinflar.append(i[0])
+natija_matritsasi = suniy_hayot_avtomati(QOIDA, QADAMLAR, KENGLIK)
 
-    natija = max(set(sinflar), key=sinflar.count)
-    return natija
+plt.figure(figsize=(10, 10))
 
-while True:
-    print("""
-            1.evklid
-            2.manhetn
-            3.chebyshev
-            4.chqish
-            """)
-    l = int(input("tanlang qaysi algoritmda hsioblasin :"))
+plt.imshow(natija_matritsasi, cmap='binary', interpolation='nearest')
 
-    if l == 4:
-        break
+plt.title(f"Sun'iy hayot: {QOIDA}-qoida bo'yicha elementar avtomat", fontsize=14)
+plt.axis('off')
 
-    nuqta = list(map(float, input("alomatlarni kiritng; ").split()))
-
-    if l == 1:
-        print("eng yaqin qo'shni ", kn_n(malumotlar, nuqta, evklid))
-    elif l == 2:
-        print("eng yaqin qo'shni ", kn_n(malumotlar, nuqta, manhetten))
-    elif l == 3:
-        print("eng yaqin qo'shni ", kn_n(malumotlar, nuqta, chebyshev))
-    else:
-        print("Xato tanlov!")
+plt.show()
+# matritsada 32 qadam tashagandan kegin ohiriga borgandan kegin yana nechi marta qadam tashidi

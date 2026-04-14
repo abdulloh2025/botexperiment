@@ -120,7 +120,7 @@ for i in range(k_soni):
 
 
 
-
+3-topshiriq
 # import math
 # kitoblar = {
 #     "Matematika": [5, 2, 1],
@@ -185,7 +185,7 @@ for i in range(k_soni):
 # main()
 #
 #
-#
+5-topshiriq
 # malumot = [
 #     ("Ha", "Ha", 30),
 #     ("Ha", "Yo‘q", 10),
@@ -261,9 +261,8 @@ for i in range(k_soni):
 # plt.grid(alpha=0.3)
 # plt.show()
 
-
+4-topshiriq
 #5x5 matrixni transponerlash
-
 # print("5x5 matritsani kiriting:")
 # A = []
 # for i in range(5):
@@ -319,9 +318,6 @@ for i in range(k_soni):
 # natija = determinant_gauss(M)
 # print(f"Determinant (diagonal ko'paytma) = {round(natija, 2)}")
 
-
-
-
 # n = int(input("\nMatritsalar o'lchamini kiriting (n): "))
 # A, B = [], []
 #
@@ -372,3 +368,220 @@ for i in range(k_soni):
 #     t22 = a11 / det
 #
 #     print(f"Teskari matritsa: \n[{t11}, {t12}]\n[{t21}, {t22}]")
+# 6-topshiriq
+# import random
+# sonlar=[1,1,2,2,3,3,4,4,5,5]
+# # for i in range(10):
+# #     sonlar.append(random.randint(1,10))
+# # print(sonlar)
+#
+# def orta_qiymat(sonlar):
+#     return sum(sonlar)/len(sonlar)
+#
+# def mediana(sonlar):
+#     sonlar.sort()
+#     print(sonlar)
+#     if len(sonlar)%2==0:
+#         return (sonlar[len(sonlar)//2]+sonlar[len(sonlar)//2-1])/2
+#     else:
+#         return sonlar[len(sonlar)//2]
+# def moda(sonlar):
+#     k=0
+#     g=[]
+#     p=set(sorted(sonlar))
+#     for i in p:
+#
+#         j=sonlar.count(i)
+#         if j>=k:
+#             k=j
+#         g.append(j)
+#     if len(set(g))==1:
+#         return "modasi yuq!"
+#     o=[]
+#     for i in p:
+#         if sonlar.count(i)==k:
+#             o.append(i)
+#     return o
+#
+#
+# def dispirsiya(sonlar):
+#     ortacha=sum(sonlar)/len(sonlar)
+#     k=0
+#     for i in sonlar:
+#         k+=(i-ortacha)**2
+#     return k/len(sonlar)
+#
+# print(orta_qiymat(sonlar))
+# print(mediana(sonlar))
+# print(moda(sonlar))
+# print(dispirsiya(sonlar))
+
+
+# import matplotlib.pyplot as plt
+#
+# x = [1, 3, 5, 8]
+# y = [2, 4, 3, 9]
+#
+# data = []
+# for i in range(len(x)):
+#     data += [x[i]] * y[i]
+#
+# plt.hist(data, bins=12, edgecolor='red')
+# plt.title("Gistogramma")
+# plt.xlabel("Interval")
+# plt.ylabel("Chastota")
+# plt.show()
+#
+# plt.plot(x, y, marker='o')
+# plt.title("Chastotalar poligoni")
+# plt.xlabel("Interval markazi")
+# plt.ylabel("Chastota")
+# plt.grid(True)
+# plt.show()
+# x_lar = [1, 2, 3]
+# y_lar = [2, 3, 4]
+# w = 0
+# b = 0
+# organish_tezligi = 0.01
+# iteratsiya = 1000
+# n = len(x_lar)
+# for qadam in range(iteratsiya):
+#     mse = 0
+# grad_w = 0
+# grad_b = 0
+# for i in range(n):
+#     x = x_lar[i]
+# y = y_lar[i]
+# # Bashorat
+# y_bashorat = w * x + b
+# # Xatolik
+# xatolik = y - y_bashorat
+# # MSE hisoblash
+# mse += xatolik ** 2
+# # Gradientlar
+# grad_w += -2 * x * xatolik
+# grad_b += -2 * xatolik
+# mse /= n
+# grad_w /= n
+# grad_b /= n
+# w = w - organish_tezligi * grad_w
+# b = b - organish_tezligi * grad_b
+# if qadam % 100 == 0:
+#     print(f"Qadam {qadam}: w={w:.4f}, b={b:.4f}, mse={mse:.4f}")
+#
+# print("\nYakuniy natija:")
+# print(f"w = {w}")
+# print(f"b = {b}")
+# kottaroq dataset bilan matplotlib da qilish kere
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import numpy as np  # Tasodifiy sonlar generatori uchun kerak
+import matplotlib.pyplot as plt  # Grafik chizish uchun kerak
+
+# 1. Kottaroq Dataset yaratish
+# Biz taxminan y = 2x + 1 chizig'iga yaqin nuqtalar yaratamiz (bir oz shovqin bilan)
+np.random.seed(42)  # Har safar bir xil natija chiqishi uchun
+X_train = np.random.rand(100, 1)  # 100 ta 0 va 1 oralig'idagi tasodifiy son (x lar)
+y_train = 2 * X_train + 1 + (np.random.randn(100, 1) * 0.1)  # y = 2x + 1 ga shovqin qo'shildi
+
+# Bizning "organish_tezligi", "iteratsiya" va boshqa o'zgaruvchilarni massivga moslashtiramiz
+n = len(X_train)  # Nuqtalar soni (100)
+
+# Parametrlar
+w = 0.0
+b = 0.0
+organish_tezligi = 0.01  # Bu kottaroq dataset uchun normal tezlik
+iteratsiya_soni = 1000
+
+# Grafik uchun ma'lumotlarni saqlash (MSE pasayishini ko'rish uchun)
+mse_tarixi = []
+
+# --- ASOSIY GRADIENT DESCENT TSIKLI (TO'G'IRLANGAN INDENTATSIYA) ---
+for qadam in range(iteratsiya_soni):
+    mse_yigindisi = 0.0
+    grad_w_yigindisi = 0.0
+    grad_b_yigindisi = 0.0
+
+    # Har bir nuqta bo'yicha hisoblash
+    for i in range(n):
+        x = X_train[i][0]  # [0] chunki numpy massivi 2-o'lchamli
+        y = y_train[i][0]
+
+        # Bashorat (y = wx + b)
+        y_bashorat = w * x + b
+
+        # Xatolik
+        xatolik = y - y_bashorat
+
+        # MSE yig'indisi
+        mse_yigindisi += xatolik ** 2
+
+        # Gradientlar (Hususiy hosilalar)
+        # Sizning kodingizdagi formulalar (to'g'ri): -2 * x * xatolik va -2 * xatolik
+        grad_w_yigindisi += -2 * x * xatolik
+        grad_b_yigindisi += -2 * xatolik
+
+    # O'rtacha qiymatlarni hisoblash
+    mse = mse_yigindisi / n
+    grad_w = grad_w_yigindisi / n
+    grad_b = grad_b_yigindisi / n
+
+    # Parametrlarni yangilash (Gradient Descent qoidasi)
+    w = w - organish_tezligi * grad_w
+    b = b - organish_tezligi * grad_b
+
+    # Tarixga saqlash (grafik uchun)
+    mse_tarixi.append(mse)
+
+    # Har 100 qadamda natijani chiqarish
+    if qadam % 100 == 0:
+        print(f"Qadam {qadam:4}: w = {w:.4f}, b = {b:.4f}, MSE = {mse:.4f}")
+
+# Yakuniy natija
+print("-" * 30)
+print("O'qitish yakunlandi!")
+print(f"Bashorat qilingan chiziq: y = {w:.4f}x + {b:.4f}")
+print(f"Haqiqiy chiziq:      y = 2.0x + 1.0 (taxminan)")
+
+# --- GRAFIKLAR ---
+
+# 1-grafik: Data nuqtalari va o'qitilgan chiziq
+plt.figure(figsize=(12, 5))
+
+plt.subplot(1, 2, 1)  # Ikki grafikdan birinchisi
+plt.scatter(X_train, y_train, color='blue', label='Data nuqtalari', alpha=0.6)  # Nuqtalar
+
+# Bashorat qilingan chiziqni chizish
+X_line = np.linspace(0, 1, 10)  # Chiziq uchun x qiymatlar
+Y_line = w * X_line + b  # Chiziq uchun y qiymatlar
+plt.plot(X_line, Y_line, color='red', linewidth=3, label=f'Bashorat: y={w:.2f}x+{b:.2f}')
+
+plt.title('Chiziqli Regressiya Natijasi')
+plt.xlabel('X (Kirish)')
+plt.ylabel('Y (Chiqish)')
+plt.legend()
+plt.grid(True)
+
+# 2-grafik: MSE (O'rtacha kvadratik xatolik) pasayishi
+plt.subplot(1, 2, 2)  # Ikki grafikdan ikkinchisi
+plt.plot(mse_tarixi, color='purple', linewidth=2)
+plt.title('Xatolikning (MSE) Pasayishi')
+plt.xlabel('Iteratsiya Qadami')
+plt.ylabel('MSE Qiymati')
+plt.grid(True)
+
+plt.tight_layout()
+plt.show()  # Grafikni ko'rsatish
