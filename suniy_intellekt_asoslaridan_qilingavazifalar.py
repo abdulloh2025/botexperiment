@@ -251,3 +251,199 @@
 
 #k ning eng max chegarasi
 # javob : 2x -1 eng kam sinifni 2 ga kopaytirib kegin 1ni ayiramiz
+
+
+
+
+# # import random
+# # import matplotlib.pyplot as plt
+# #
+# # def suniy_hayot_avtomati(qoida_raqami, qadamlar_soni, kenglik):
+# #     qoida_ikkilik = format(qoida_raqami, '08b')
+# #
+# #
+# #     qoidalar = {
+# #         (1, 1, 1): int(qoida_ikkilik[0]),
+# #         (1, 1, 0): int(qoida_ikkilik[1]),
+# #         (1, 0, 1): int(qoida_ikkilik[2]),
+# #         (1, 0, 0): int(qoida_ikkilik[3]),
+# #         (0, 1, 1): int(qoida_ikkilik[4]),
+# #         (0, 1, 0): int(qoida_ikkilik[5]),
+# #         (0, 0, 1): int(qoida_ikkilik[6]),
+# #         (0, 0, 0): int(qoida_ikkilik[7])
+# #     }
+# #
+# #
+# #     hozirgi_qator = [random.randint(0, 1) for i in range(kenglik)]
+# #
+# #     matritsa = [hozirgi_qator]
+# #
+# #     for i in range(qadamlar_soni - 1):
+# #         keyingi_qator = []
+# #         for i in range(kenglik):
+# #             # Qo'shnilar: chap, markaz va o'ng katak
+# #             chap = hozirgi_qator[(i - 1) % kenglik]
+# #             markaz = hozirgi_qator[i]
+# #             ong = hozirgi_qator[(i + 1) % kenglik]
+# #
+# #             # Yangi holatni jadvaldan aniqlash
+# #             yangi_holat = qoidalar[(chap, markaz, ong)]
+# #             keyingi_qator.append(yangi_holat)
+# #
+# #         hozirgi_qator = keyingi_qator
+# #         matritsa.append(hozirgi_qator)
+# #
+# #     return matritsa
+# #
+# # QOIDA = 98
+# # QADAMLAR = 32
+# # KENGLIK = 32
+# #
+# # natija_matritsasi = suniy_hayot_avtomati(QOIDA, QADAMLAR, KENGLIK)
+# #
+# # plt.figure(figsize=(10, 10))
+# #
+# # plt.imshow(natija_matritsasi, cmap='binary', interpolation='nearest')
+# #
+# # plt.title(f"Sun'iy hayot: {QOIDA}-qoida bo'yicha elementar avtomat", fontsize=14)
+# # plt.axis('off')
+# #
+# # plt.show()
+# # # matritsada 32 qadam tashagandan kegin ohiriga borgandan kegin yana nechi marta qadam tashidi
+# import random
+# import matplotlib.pyplot as plt
+#
+# def suniy_hayot_avtomati(qoida_raqami, qadamlar_soni, kenglik):
+#     # Kiritilgan qoidani 8 bitli ikkilik ko'rinishga o'tkazamiz
+#     qoida_ikkilik = format(qoida_raqami, '08b')
+#
+#     qoidalar = {
+#         (1, 1, 1): int(qoida_ikkilik[0]),
+#         (1, 1, 0): int(qoida_ikkilik[1]),
+#         (1, 0, 1): int(qoida_ikkilik[2]),
+#         (1, 0, 0): int(qoida_ikkilik[3]),
+#         (0, 1, 1): int(qoida_ikkilik[4]),
+#         (0, 1, 0): int(qoida_ikkilik[5]),
+#         (0, 0, 1): int(qoida_ikkilik[6]),
+#         (0, 0, 0): int(qoida_ikkilik[7])
+#     }
+#
+#     # Boshlang'ich tasodifiy holat
+#     hozirgi_qator = [random.randint(0, 1) for _ in range(kenglik)]
+#     matritsa = [hozirgi_qator]
+#
+#     for _ in range(qadamlar_soni - 1):
+#         keyingi_qator = []
+#         for i in range(kenglik):
+#             chap = hozirgi_qator[(i - 1) % kenglik]
+#             markaz = hozirgi_qator[i]
+#             ong = hozirgi_qator[(i + 1) % kenglik]
+#
+#             yangi_holat = qoidalar[(chap, markaz, ong)]
+#             keyingi_qator.append(yangi_holat)
+#
+#         hozirgi_qator = keyingi_qator
+#         matritsa.append(hozirgi_qator)
+#
+#     return matritsa
+#
+# # --- Muloqot qismi (Input) ---
+# try:
+#     # Qoidani foydalanuvchidan so'raymiz (0 dan 255 gacha)
+#     foydalanuvchi_qoidasi = int(input("Qoida raqamini kiriting (masalan, 98 yoki 30): "))
+#     qadamlar = 32
+#     kenglik = 32
+#
+#     # Hisoblash
+#     natija = suniy_hayot_avtomati(foydalanuvchi_qoidasi, qadamlar, kenglik)
+#
+#     # Chizish
+#     plt.figure(figsize=(10, 10))
+#     plt.imshow(natija, cmap='binary', interpolation='nearest')
+#     plt.title(f"Sun'iy hayot: {foydalanuvchi_qoidasi}-qoida ({kenglik}x{qadamlar})")
+#     plt.axis('off')
+#     plt.show()
+#
+# except ValueError:
+#     print("Iltimos, faqat butun son kiriting!")
+
+import random
+import matplotlib.pyplot as plt
+
+
+qoida_n = int(input("Qoida raqami (0-255): "))
+n_qator = 5
+m_ustun = 6
+
+ikkilik = format(qoida_n, '08b')
+
+birinchi_qator = []
+for i in range(m_ustun):
+    birinchi_qator.append(random.randint(0, 1))
+
+matritsa = [birinchi_qator]
+
+for k in range(n_qator - 1):
+    oldingi_qator = matritsa[k]
+    yangi_qator = []
+    for j in range(m_ustun):
+        chap = oldingi_qator[(j - 1) % m_ustun]
+        markaz = oldingi_qator[j]
+        ong = oldingi_qator[(j + 1) % m_ustun]
+        holat = str(chap) + str(markaz) + str(ong)
+
+        if holat == "111":
+            yangi_qator.append(int(ikkilik[0]))
+        elif holat == "110":
+            yangi_qator.append(int(ikkilik[1]))
+        elif holat == "101":
+            yangi_qator.append(int(ikkilik[2]))
+        elif holat == "100":
+            yangi_qator.append(int(ikkilik[3]))
+        elif holat == "011":
+            yangi_qator.append(int(ikkilik[4]))
+        elif holat == "010":
+            yangi_qator.append(int(ikkilik[5]))
+        elif holat == "001":
+            yangi_qator.append(int(ikkilik[6]))
+        elif holat == "000":
+            yangi_qator.append(int(ikkilik[7]))
+
+    matritsa.append(yangi_qator)
+for i in matritsa:
+    print(i)
+hayot_matritsasi = [qator[:] for qator in matritsa]
+
+for takrorlash in range(50):  # 50 marta evolyutsiya
+    yangi_holat = [qator[:] for qator in hayot_matritsasi]
+    for i in range(1, n_qator - 1):
+        for j in range(1, m_ustun - 1):
+            tiriklar = 0
+            for x in [-1, 0, 1]:
+                for y in [-1, 0, 1]:
+                    if x == 0 and y == 0: continue
+                    if hayot_matritsasi[i + x][j + y] == 1:
+                        tiriklar += 1
+
+
+            if hayot_matritsasi[i][j] == 1:
+                if tiriklar < 2 or tiriklar > 3:
+                    yangi_holat[i][j] = 0
+            else:
+                if tiriklar == 3:
+                    yangi_holat[i][j] = 1
+
+    if hayot_matritsasi == yangi_holat:
+        break
+    hayot_matritsasi = yangi_holat
+
+
+fig, (rasm1, rasm2) = plt.subplots(1, 2, figsize=(10, 5))
+
+rasm1.imshow(matritsa, cmap='binary')
+rasm1.set_title(f"1. Elementar Avtomat (Rule {qoida_n})")
+
+rasm2.imshow(hayot_matritsasi, cmap='binary')
+rasm2.set_title("2. Hayot o'yini natijasi")
+
+plt.show()
