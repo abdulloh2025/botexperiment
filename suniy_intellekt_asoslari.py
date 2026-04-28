@@ -1,133 +1,228 @@
-import random
-import tkinter as tk
-from tkinter import messagebox
+import math
 
-# 1. Wolfram avtomati asosida dunyoni yaratish (Wolfram Elementary CA)
-def wolfram_dunyoni_yarat(qator_uzunligi, qator_soni, qoida_raqami):
-    # Qoidani 8-bitli ikkilik tizimga o'tkazish
-    qoida_bin = format(qoida_raqami, '08b')
-    print(f"Qoida {qoida_raqami} ikkilikda: {qoida_bin}")
+def fayldan_jadval_yasash(fayl_nomi):
+    natija_jadval = []
+    f = open(fayl_nomi, "r")
+    qatorlar = f.readlines()
 
-    # Boshlang'ich holat (0-qator tasodifiy to'ldiriladi)
-    # Bu yerda i ishlatildi
-    dunya = [[0] * qator_uzunligi for i in range(qator_soni)]
-    dunya[0] = [random.randint(0, 1) for i in range(qator_uzunligi)]
+    for q in qatorlar:
+        qism_sonlar = []
+        for son in q.split():
+            qism_sonlar.append(float(son))
+        natija_jadval.append(qism_sonlar)
 
-    # Wolfram qoidalarini qatorlar bo'yicha qo'llash
-    for i in range(qator_soni - 1):
-        for j in range(qator_uzunligi):
-            # Qo'shnilarni aniqlash (chap, markaz, ong)
-            chap = dunya[i][j - 1]
-            markaz = dunya[i][j]
-            ong = dunya[i][(j + 1) % qator_uzunligi]
+    f.close()
+    return natija_jadval
 
-            holat = f"{chap}{markaz}{ong}"
-            # Ikkilikdan o'nlikka o'tkazib qoida indeksini topish
-            indeks = 7 - int(holat, 2)
-            dunya[i + 1][j] = int(qoida_bin[indeks])
-    return dunya
+jadval = fayldan_jadval_yasash("Volki_Sobaki.tbl")
+n_qatorlar = len(jadval)
+m_ustunlar = len(jadval[0])
+print("Qatorlar soni:", n_qatorlar)
+print("Ustunlar soni:", m_ustunlar)
 
 
-# 2. Conway "Hayot o'yini" qoidalari
-def hayot_oyini_qadam(hozirgi_dunya):
-    yangi_dunya = [qator[:] for qator in hozirgi_dunya]
-    n_qator = len(hozirgi_dunya)
-    m_ustun = len(hozirgi_dunya[0])
 
-    for i in range(1, n_qator - 1):
-        for j in range(1, m_ustun - 1):
-            # 8 ta qo'shnini yig'indisini hisoblash
-            qoshnilar_yigindisi = (
-                    hozirgi_dunya[i - 1][j - 1] + hozirgi_dunya[i - 1][j] + hozirgi_dunya[i - 1][j + 1] +
-                    hozirgi_dunya[i][j - 1] + hozirgi_dunya[i][j + 1] +
-                    hozirgi_dunya[i + 1][j - 1] + hozirgi_dunya[i + 1][j] + hozirgi_dunya[i + 1][j + 1]
-            )
+def urta_qiymat(ustun_elementlari):
+    yigindi = 0.0
+    element = len(ustun_elementlari)
+    if element == 0:
+        return 0
 
-            # Tirik yoki o'lik holatini aniqlash
-            if hozirgi_dunya[i][j] == 1:
-                # Tirik hujayra: 2 yoki 3 qo'shni bo'lsa yashaydi
-                yangi_dunya[i][j] = 1 if qoshnilar_yigindisi in [2, 3] else 0
-            else:
-                # O'lik hujayra: 3 ta qo'shni bo'lsa tiriladi
-                yangi_dunya[i][j] = 1 if qoshnilar_yigindisi == 3 else 0
-    return yangi_dunya
+    for qiymat in ustun_elementlari:
+        yigindi = yigindi + qiymat
+    return yigindi / element
 
 
-# 3. Interfeys klassi (Tkinter orqali vizualizatsiya)
-class SimulyatsiyaDasturi:
-    def __init__(self, asosiy_oyna, tarix):
-        self.oyna = asosiy_oyna
-        self.tarix = tarix
-        self.qadam_indeksi = 0
-        self.katak_ulchami = 15
+def mediana_topish(ustun_elementlari):
+    toza_sonlar = []
+    for son in ustun_elementlari:
+        if son != 0:
+            toza_sonlar.append(son)
+    toza_sonlar.sort()
+    uzunlik = len(toza_sonlar)
 
-        # Chizma maydoni (Canvas)
-        self.kvars = tk.Canvas(asosiy_oyna, width=len(tarix[0][0]) * self.katak_ulchami,
-                               height=len(tarix[0]) * self.katak_ulchami, bg="white")
-        self.kvars.pack(pady=10)
+    if uzunlik == 0:
+        return 0
 
-        # Boshqaruv tugmalari
-        boshqaruv = tk.Frame(asosiy_oyna)
-        boshqaruv.pack(pady=5)
-        tk.Button(boshqaruv, text="<< Oldingi", command=self.oldingi, width=10).pack(side=tk.LEFT, padx=5)
-        tk.Button(boshqaruv, text="Keyingi >>", command=self.keyingi, width=10).pack(side=tk.LEFT, padx=5)
-
-        self.holat_label = tk.Label(asosiy_oyna, text="")
-        self.holat_label.pack()
-
-        self.chizish()
-
-    def chizish(self):
-        self.kvars.delete("all")
-        matritsa = self.tarix[self.qadam_indeksi]
-        # Bu yerda enumerate ishlatilgan, i va j o'zgaruvchilari tayyor
-        for i, qator in enumerate(matritsa):
-            for j, qiymat in enumerate(qator):
-                if qiymat == 1:
-                    x1, y1 = j * self.katak_ulchami, i * self.katak_ulchami
-                    self.kvars.create_rectangle(x1, y1, x1 + self.katak_ulchami, y1 + self.katak_ulchami,
-                                                fill="black", outline="gray")
-        self.holat_label.config(text=f"Hozirgi qadam: {self.qadam_indeksi} / {len(self.tarix) - 1}")
-
-    def keyingi(self):
-        if self.qadam_indeksi < len(self.tarix) - 1:
-            self.qadam_indeksi += 1
-            self.chizish()
-        else:
-            messagebox.showinfo("Tugadi", "Bu oxirgi iteratsiya.")
-
-    def oldingi(self):
-        if self.qadam_indeksi > 0:
-            self.qadam_indeksi -= 1
-            self.chizish()
+    oraliq_index = uzunlik // 2
+    if uzunlik % 2 != 0:
+        return toza_sonlar[oraliq_index]
+    else:
+        return (toza_sonlar[oraliq_index - 1] + toza_sonlar[oraliq_index]) / 2
 
 
-# Dasturni ishga tushirish qismi
-if __name__ == "__main__":
-    n = int(input("n (ustunlar soni)="))
-    m = int(input("m (qatorlar soni)="))
-    qoida = int(input("Qoida raqami (0-255): "))
+def dispersiya_hisoblash(ustun_elementlari):
+    m_qiymat = urta_qiymat(ustun_elementlari)
+    summa = 0.0
+    soni = len(ustun_elementlari)
 
-    # 1-qadam: Wolfram orqali matritsa yaratish
-    dastlabki_dunya = wolfram_dunyoni_yarat(n, m, qoida)
+    if soni == 0:
+        return 0
 
-    # Terminalda matritsani chiqarish
-    print("\nHosil bo'lgan boshlang'ich matritsa:")
-    for qator in dastlabki_dunya:
-        print(qator)
-    print("-" * 30)
+    for son in ustun_elementlari:
+        summa = summa + (son - m_qiymat) ** 2
+    return summa / soni
 
-    # 2-qadam: Hayot o'yini tarixi (10 qadamgacha)
-    tarix_ruyxati = [dastlabki_dunya]
-    # Bu yerda _ o'rniga k qo'yildi (i bilan aralashib ketmasligi uchun)
-    for k in range(100):
-        keyingi_holat = hayot_oyini_qadam(tarix_ruyxati[-1])
-        if keyingi_holat == tarix_ruyxati[-1]:
-            break
-        tarix_ruyxati.append(keyingi_holat)
 
-    # 3-qadam: Oynani ochish
-    root = tk.Tk()
-    root.title("Sun'iy Hayot: Wolfram + Conway")
-    app = SimulyatsiyaDasturi(root, tarix_ruyxati)
-    root.mainloop()
+def korrelyatsiya_k(x_ustun, y_ustun):
+    urtacha_x = urta_qiymat(x_ustun)
+    urtacha_y = urta_qiymat(y_ustun)
+
+    surat = 0.0
+    maxraj_x = 0.0
+    maxraj_y = 0.0
+
+    for index in range(len(x_ustun)):
+        if x_ustun[index] != 0 and y_ustun[index] != 0:
+            surat = surat + (x_ustun[index] - urtacha_x) * (y_ustun[index] - urtacha_y)
+            maxraj_x = maxraj_x + (x_ustun[index] - urtacha_x) ** 2
+            maxraj_y = maxraj_y + (y_ustun[index] - urtacha_y) ** 2
+
+    if maxraj_x == 0 or maxraj_y == 0:
+        return 0
+
+    return surat / math.sqrt(maxraj_x * maxraj_y)
+
+
+def z_score_aniqlash():
+    print("\nOUTLIER (Z-score usuli)")
+    for j in range(m_ustunlar):
+        joriy_ustun = []
+        for i in range(n_qatorlar):
+            joriy_ustun.append(jadval[i][j])
+
+        m = urta_qiymat(joriy_ustun)
+        d = dispersiya_hisoblash(joriy_ustun)
+        std = math.sqrt(d)
+
+        if std == 0:
+            continue
+
+        for i in range(n_qatorlar):
+            qiymat = jadval[i][j]
+            if qiymat != 0:
+                z = abs((qiymat - m) / std)
+                if z > 3:
+                    print("Qator:", i, " Ustun:", j, " Qiymat:", qiymat)
+
+
+def iqr_usuli():
+    print("\n IQR OUTLIER ")
+    for j in range(m_ustunlar):
+        tartiblangan = []
+        for i in range(n_qatorlar):
+            if jadval[i][j] != 0:
+                tartiblangan.append(jadval[i][j])
+
+        tartiblangan.sort()
+
+        if len(tartiblangan) == 0:
+            continue
+
+        chorak_1 = tartiblangan[int(len(tartiblangan) * 0.25)]
+        chorak_3 = tartiblangan[int(len(tartiblangan) * 0.75)]
+        iqr_masofa = chorak_3 - chorak_1
+
+        pastki_chegara = chorak_1 - 1.5 * iqr_masofa
+        yuqori_chegara = chorak_3 + 1.5 * iqr_masofa
+
+        for i in range(n_qatorlar):
+            qiymat = jadval[i][j]
+            if qiymat != 0:
+                if qiymat < pastki_chegara or qiymat > yuqori_chegara:
+                    print("Qator:", i, " Ustun:", j, " Qiymat:", qiymat)
+
+
+def bosh_joyni_mean_bilan_toldir():
+    yangi_jadval = []
+    for qator in jadval:
+        yangi_jadval.append(qator[:])
+
+    for j in range(m_ustunlar):
+        joriy_ustun = []
+        for i in range(n_qatorlar):
+            joriy_ustun.append(jadval[i][j])
+
+        urtacha_m = urta_qiymat(joriy_ustun)
+
+        for i in range(n_qatorlar):
+            if yangi_jadval[i][j] == 0:
+                yangi_jadval[i][j] = round(urtacha_m, 2)
+
+    return yangi_jadval
+
+
+def bosh_joyni_mediana_bilan_toldir():
+    yangi_jadval = []
+    for qator in jadval:
+        yangi_jadval.append(qator[:])
+
+    for j in range(m_ustunlar):
+        joriy_ustun = []
+        for i in range(n_qatorlar):
+            joriy_ustun.append(jadval[i][j])
+
+        med_qiymat = mediana_topish(joriy_ustun)
+
+        for i in range(n_qatorlar):
+            if yangi_jadval[i][j] == 0:
+                yangi_jadval[i][j] = med_qiymat
+
+    return yangi_jadval
+
+while True:
+    print("\n Tanlang qaysi usul bilan ")
+    print("1 -> Korrelyatsiya hisoblash")
+    print("2 -> Dispersiya hisoblash")
+    print("3 -> Z-score outlier qidirish")
+    print("4 -> IQR outlier qidirish")
+    print("5 -> Nol o'rniga Mean qo'yish")
+    print("6 -> Nol o'rniga Median qo'yish")
+    print("7 -> Dasturdan chiqish")
+
+    tanlash = input("Kerakli bo'limni tanlang: ")
+
+    if tanlash == "1":
+        for j in range(m_ustunlar - 1):
+            x_ustun = []
+            y_ustun = []
+
+            for i in range(n_qatorlar):
+                x_ustun.append(jadval[i][0])
+                y_ustun.append(jadval[i][j + 1])
+
+            natija = korrelyatsiya_k(x_ustun, y_ustun)
+            print(f"0-ustun bilan {j + 1}-ustun o'rtasidagi Korrelyatsiya: {round(natija, 4)}")
+
+    elif tanlash == "2":
+        print("\nHar bir ustun uchun dispersiya:")
+        for j in range(m_ustunlar):
+            joriy = []
+            for i in range(n_qatorlar):
+                joriy.append(jadval[i][j])
+            print("Ustun", j, ":", dispersiya_hisoblash(joriy))
+
+    elif tanlash == "3":
+        z_score_aniqlash()
+
+    elif tanlash == "4":
+        iqr_usuli()
+
+    elif tanlash == "5":
+        natija_mean = bosh_joyni_mean_bilan_toldir()
+        print("\nO'rtacha qiymat bilan to'ldirilgan :")
+        for r in natija_mean:
+            print(r)
+
+    elif tanlash == "6":
+        natija_median = bosh_joyni_mediana_bilan_toldir()
+        print("\nMediana bilan to'ldirilgan :")
+        for r in natija_median:
+            print(r)
+
+
+    elif tanlash == "7":
+        print("Dastur to'xtatildi.")
+        break
+    else:
+        print("Xato tanlov, qaytadan urinib ko'ring!")

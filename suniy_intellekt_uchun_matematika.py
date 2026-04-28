@@ -80,3 +80,7 @@
 # plt.show()
 #
 # print(f"\nYakuniy natija: y = {w:.4f}x + {b:.4f}")
+
+
+
+

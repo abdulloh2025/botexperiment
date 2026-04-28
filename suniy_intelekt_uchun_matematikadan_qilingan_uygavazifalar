@@ -417,62 +417,7 @@ for i in range(k_soni):
 # print(dispirsiya(sonlar))
 
 
-# import matplotlib.pyplot as plt
-#
-# x = [1, 3, 5, 8]
-# y = [2, 4, 3, 9]
-#
-# data = []
-# for i in range(len(x)):
-#     data += [x[i]] * y[i]
-#
-# plt.hist(data, bins=12, edgecolor='red')
-# plt.title("Gistogramma")
-# plt.xlabel("Interval")
-# plt.ylabel("Chastota")
-# plt.show()
-#
-# plt.plot(x, y, marker='o')
-# plt.title("Chastotalar poligoni")
-# plt.xlabel("Interval markazi")
-# plt.ylabel("Chastota")
-# plt.grid(True)
-# plt.show()
-# x_lar = [1, 2, 3]
-# y_lar = [2, 3, 4]
-# w = 0
-# b = 0
-# organish_tezligi = 0.01
-# iteratsiya = 1000
-# n = len(x_lar)
-# for qadam in range(iteratsiya):
-#     mse = 0
-# grad_w = 0
-# grad_b = 0
-# for i in range(n):
-#     x = x_lar[i]
-# y = y_lar[i]
-# # Bashorat
-# y_bashorat = w * x + b
-# # Xatolik
-# xatolik = y - y_bashorat
-# # MSE hisoblash
-# mse += xatolik ** 2
-# # Gradientlar
-# grad_w += -2 * x * xatolik
-# grad_b += -2 * xatolik
-# mse /= n
-# grad_w /= n
-# grad_b /= n
-# w = w - organish_tezligi * grad_w
-# b = b - organish_tezligi * grad_b
-# if qadam % 100 == 0:
-#     print(f"Qadam {qadam}: w={w:.4f}, b={b:.4f}, mse={mse:.4f}")
-#
-# print("\nYakuniy natija:")
-# print(f"w = {w}")
-# print(f"b = {b}")
-# kottaroq dataset bilan matplotlib da qilish kere
+
 
 
 
